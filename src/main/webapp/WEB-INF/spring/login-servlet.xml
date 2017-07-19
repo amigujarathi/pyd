@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/mvc
+	  http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+      http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+  
+    <mvc:resources mapping="/jsp/**" location="/WEB-INF/jsp/" />
+	<mvc:annotation-driven />
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/WEB-INF/jsp/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+    <context:component-scan base-package="com.verinite.aas.controller.LoginForm" />    <!--  com.ClientAdminCounters.test-->
+    <bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://49.248.35.50:3306/pydaas" />
+		<property name="username" value="root" />
+		<property name="password" value="Verinite123" />
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingResources">
+		<list>
+			  <value>hibernate/LoginForm2.hbm.xml</value>
+			  <value>hibernate/emailVerinifactionForgotpassword.hbm.xml</value>
+			   <value>hibernate/NewUserFormDao.hbm.xml</value>
+			 </list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect
+				</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">create</prop>
+			</props>
+		</property>
+	</bean>
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+	
+		<bean id="serviceuserpassword" class="com.verinite.aas.helpers.serviceloginform.forgotPasswordVerificationClass" scope="prototype">  
+    </bean>
+    
+    <bean id="servicenuser" class="com.verinite.aas.helpers.serviceloginform.NewUserDataServiceclass" scope="prototype">  
+    </bean>
+    <bean id="HelperPassword" class="com.verinite.aas.helpers.serviceloginform.ForgotPasswordHelperServiceclass" scope="prototype">  
+    </bean>
+    
+     <bean id="ServiceLoginMainS" class="com.verinite.aas.service.serviceloginformnew.ServiceLoginFormService" scope="prototype">  
+    </bean>
+   
+     <bean id="AnswerQuestionS" class="com.verinite.aas.service.forgotpassword.AnswerGivenQuestionservice" scope="prototype">  
+    </bean>
+   
+     <bean id="ForgotPasswordS" class="com.verinite.aas.service.forgotpassword.ForgotPasswordService" scope="prototype">  
+    </bean>
+   
+     <bean id="ForgotPasswordUserDetailS" class="com.verinite.aas.service.forgotpassword.ForgotpasswordUserdetailsService" scope="prototype">  
+    </bean>
+    
+     <bean id="HashCodeAndEmailS" class="com.verinite.aas.service.forgotpassword.HashcodeEmailidService" scope="prototype">  
+    </bean>
+    
+     
+     <bean id="HashCodeGeneratorS" class="com.verinite.aas.service.forgotpassword.HashCodeGeneratorService" scope="prototype">  
+    </bean>
+    
+      <bean id="HashCodeS" class="com.verinite.aas.service.forgotpassword.HashCodeService" scope="prototype">  
+    </bean>
+     
+    <bean id="SendEmailS" class="com.verinite.aas.service.forgotpassword.SendEmailService" scope="prototype">  
+    </bean>
+    
+      <bean id="NewPasswordSettingsS" class="com.verinite.aas.service.forgotpassword.NewPasswordSettingservice" scope="prototype">  
+    </bean>
+    
+    
+      <bean id="UserQuestionS" class="com.verinite.aas.service.forgotpassword.UserQuestionGetService" scope="prototype">  
+    </bean>
+    
+      <bean id="LoginDetailsBasicService" class="com.verinite.aas.service.serviceloginformnew.LogindetailsgetBasicDetails" scope="prototype">  
+    </bean>
+    
+       <bean id="LoginUpdateCountSer" class="com.verinite.aas.service.serviceloginformnew.LoginDetailsUpdateCountService" scope="prototype">  
+    </bean>
+    
+      <bean id="NewUserDataSer" class="com.verinite.aas.service.serviceloginformnew.NewuserDataService" scope="prototype">  
+    </bean>
+    
+    
+      <bean id="service" class="com.verinite.aas.helpers.serviceloginform.UserAuthenticationService" scope="prototype">  
+    </bean>
+	
+	<bean id="helperLoginService" class="com.verinite.aas.helpers.serviceloginform.ServiceLoginFormHelperClass" scope="prototype">  
+    </bean>
+	
+    <bean id="loginservice" class="com.verinite.aas.helpers.serviceloginform.ErrorCountService" scope="prototype">  
+    </bean>
+    
+      <bean id="servicenew" class="com.verinite.aas.helpers.serviceloginform.UserAuthenticationService" scope="prototype">  
+    </bean>
+   
+	
+    <bean id="sessionutil" class="com.paydue.util.SessionUtil" scope="prototype"><!--com.paydue.util.SessionUtil -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	<bean id="ErrorCountdaoUpdate" class="com.verinite.aas.dao.serviceloginform.ErrorCountClassdao" scope="prototype">
+		<property name="sessionUtil" ref="sessionutil"></property>
+	</bean>
+	
+    
+	<bean id="daonewuserclass" class="com.verinite.aas.dao.serviceloginform.newuserclass" scope="prototype">
+		<property name="sessionUtil" ref="sessionutil"></property>
+	</bean>
+	
+	<bean id="daonew" class="com.verinite.aas.dao.serviceloginform.LoginDaoImpl" scope="prototype">
+		<property name="sessionUtil" ref="sessionutil"></property>
+	</bean>
+	
+	
+	<bean id="daonewpassword" class="com.verinite.aas.dao.serviceloginform.forgotPasswordDaoClassnew" scope="prototype">
+		<property name="sessionUtil" ref="sessionutil"></property>
+	</bean>
+</beans>

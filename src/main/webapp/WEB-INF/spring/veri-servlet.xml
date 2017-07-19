@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="
+      http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+      http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+      http://www.springframework.org/schema/mvc
+	  http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+      http://www.springframework.org/schema/tx 
+      http://www.springframework.org/schema/tx/spring-tx.xsd">
+  <context:component-scan base-package="com.verinite.framework.controller.smsamdemail" />    <!--  com.ClientAdminCounters.test-->
+   
+    <mvc:resources mapping="/jsp/**" location="/WEB-INF/views/" />
+      <mvc:resources mapping="/images/**" location="/WEB-INF/views/images" />
+      <mvc:resources mapping="/font/**" location="/WEB-INF/views/font/" />
+	<mvc:annotation-driven />
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/WEB-INF/jsp/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+  <bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://49.248.35.50:3306/pydfw" />
+		<property name="username" value="root" />
+		<property name="password" value="Verinite123" />
+	</bean>
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="mappingResources">
+		<list>
+			 <value>hibernate/Fwchannel.hbm.xml</value>
+			
+			 </list>
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect
+				</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto">create</prop>
+			</props>
+		</property>
+	</bean>
+    <tx:annotation-driven transaction-manager="transactionManager" />
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+
+	 <bean id="SmsGatewayMainservice" class="com.verinite.framework.helpers.smsgateway.SmsGatewaySetupHelperclass" scope="prototype">  
+    </bean>
+
+    
+   <bean id="gatewaysmsservice" class="com.verinite.framework.helpers.smsgateway.NewGatewaySetupSmsServiceClass" scope="prototype">
+	</bean>
+	
+    
+    <bean id="sessionutil" class="com.verinite.framework.paydue.util.SessionUtil" scope="prototype"><!--com.paydue.util.SessionUtil -->
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	 <bean id="smsnew" class="com.verinite.framework.service.smssender.smsservicehelperclass" scope="prototype">  
+	 <property name="sessionUtil" ref="sessionutil"></property>
+    </bean>
+
+	
+	 <bean id="gatewaysetupsmsdao" class="com.verinite.framework.dao.smsgateway.NewGatewaySetupSmsdaoClass" scope="prototype">
+		<property name="sessionUtil" ref="sessionutil"></property>
+	</bean>
+	
+	
+<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	<property name="host" value="smtp.gmail.com" />
+	<property name="port" value="587" />
+	<property name="username" value="vineet.jamgaonkar@verinite.com" />
+	<property name="password" value="Password@9" />
+		
+	<property name="javaMailProperties">
+	   <props>
+       	      <prop key="mail.smtp.auth">true</prop>
+       	      <prop key="mail.smtp.starttls.enable">true</prop>
+       	   </props>
+	</property>
+</bean>
+	
+<bean id="mailMail" class="com.verinite.framework.helpers.serviceloginform.MailMail">
+	<property name="mailSender" ref="mailSender" />
+</bean>
+
+	
+	
+</beans>
